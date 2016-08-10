@@ -25,7 +25,7 @@
 	</div>
 	<div class="right-top-bar">
 		<p>Logged in as <strong><?php require_once("server.php"); echo $_SESSION["username"];?></strong></p>
-		<a id="logout" href="#">Log-out</a>
+		<a id="logout" href="#">Logout</a>
 	</div>
 </div>
 

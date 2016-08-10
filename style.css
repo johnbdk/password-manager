@@ -20,6 +20,15 @@
 	white-space : wrap;
 }
 
+a#logout {
+	text-decoration : none;
+	color 			: black;
+}
+
+a#logout:hover {
+	color : #66b8ff;
+}
+
 @media only screen and (min-height: 350px) {
 
 	.centered {
