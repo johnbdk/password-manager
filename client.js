@@ -101,45 +101,18 @@ $(document).ready(function () {
 
 	function searchValues(data) {
 
-		$("tbody").empty();
-		// Clean input fields for the next requests
-		$('#btn-search').closest('form').find('input[type=text]').val('');
-
 		do_ajax('server.php', 'search', data, 'json').done(function (data) {
 			var returned = JSON.parse(JSON.stringify(data));
 
 			if(returned.length == 0) {
-				// hide the table
-				$('.table-responsive').hide();
-				// find the content, replace it and show it
-				$('.no-rslt').find('i').html("No results found");
-				$('.no-rslt').show();
-				// hide update if needed
-				$('.form-update').hide();
-				// enable the require update message
-				$('#update-msg').show();
+				$('.table-responsive').hide();						// hide the table
+				$('.no-rslt').find('i').html("No results found");	// find the content and replace it
+				$('.no-rslt').show();								// show the content
+				$('.form-update').hide(); 							// hide update if needed
+				$('#update-msg').show();							// enable the require update message
 				return;
 			}
-			// hide the error
-			$('.no-rslt').hide();
-			// show the record that client asked
-			$('.table-responsive').show();
-			// enable update if needed
-			$('.form-update').show();
-			// hide the require update message
-			$('#update-msg').hide();
-			
-			for(val in returned) {
-				$('#table-rslt > tbody:last-child').append(
-					'<tr>'+
-					'<td>'+returned[val]['id']+'</td>'+
-					'<td>'+returned[val]['account_name']+'</td>'+
-					'<td>'+returned[val]['username']+'</td>'+
-					'<td>'+returned[val]['password']+'</td>'+
-					'<td>'+returned[val]['comment']+'</td>'+
-					'<td>'+returned[val]['url']+'</td>'+
-					'</tr>');
-			}
+			showTable(returned, searchFlag, '#btn-search');
 		});
 	}
 
@@ -149,21 +122,7 @@ $(document).ready(function () {
 			var returned = JSON.parse(JSON.stringify(data));
 
 			if(!duplicateCheck(returned)) return;
-			$("tbody").empty();
-			for(val in returned) {
-				$('#table-rslt > tbody:last-child').append(
-					'<tr>'+
-					'<td>'+returned[val]['id']+'</td>'+
-					'<td>'+returned[val]['account_name']+'</td>'+
-					'<td>'+returned[val]['username']+'</td>'+
-					'<td>'+returned[val]['password']+'</td>'+
-					'<td>'+returned[val]['comment']+'</td>'+
-					'<td>'+returned[val]['url']+'</td>'+
-					'</tr>');
-			}
-			$('.no-rslt').hide();
-			$('.table-responsive').show();
-			$('#btn-add').closest('form').find('input').val('');
+			showTable(returned, insertFlag, '#btn-add');
 		});
 	}
 
@@ -173,22 +132,7 @@ $(document).ready(function () {
 			var returned = JSON.parse(JSON.stringify(data));
 
 			if(!duplicateCheck(returned)) return;
-			$("tbody").empty();
-			for(val in returned) {
-				$('#table-rslt > tbody:last-child').append(
-					'<tr>'+
-					'<td>'+returned[val]['id']+'</td>'+
-					'<td>'+returned[val]['account_name']+'</td>'+
-					'<td>'+returned[val]['username']+'</td>'+
-					'<td>'+returned[val]['password']+'</td>'+
-					'<td>'+returned[val]['comment']+'</td>'+
-					'<td>'+returned[val]['url']+'</td>'+
-					'</tr>');
-			}
-			$('.no-rslt').hide();
-			$('.table-responsive').show();
-			$('#btn-upd').closest('form').find('input').val('');
-
+			showTable(returned, updateFlag, '#btn-upd');
 		});
 	}
 
@@ -218,6 +162,29 @@ $(document).ready(function () {
 		.fail(function (jqXHR, textStatus, errorThrown) {
 			console.log(jqXHR, textStatus, errorThrown);
 		});
+	}
+
+	function showTable(data, flag, btn) {
+
+		$("tbody").empty();				
+		for(val in data) {
+			$('#table-rslt > tbody:last-child').append(
+				'<tr>'+
+				'<td>'+data[val]['id']+'</td>'+
+				'<td>'+data[val]['account_name']+'</td>'+
+				'<td>'+data[val]['username']+'</td>'+
+				'<td>'+data[val]['password']+'</td>'+
+				'<td>'+data[val]['comment']+'</td>'+
+				'<td>'+data[val]['url']+'</td>'+
+				'</tr>');
+		}
+		$(btn).closest('form').find('input[type=text]').val('');	// Clean input fields for the next requests
+		$('.no-rslt').hide();										// hide the error
+		$('.table-responsive').show();								// show the record that client asked
+		if(flag == searchFlag) {
+			$('.form-update').show();								// enable update if needed
+			$('#update-msg').hide();								// hide the require update message
+		}
 	}
 
 	function duplicateCheck(data) {
