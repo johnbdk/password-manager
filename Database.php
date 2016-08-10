@@ -124,15 +124,15 @@ class Database {
 	}
 
 	/**
-	 * Selects a record from table customers by dynamic sql PDO statement 
+	 * Selects a record from table data by dynamic sql PDO statement 
 	 */
 	public function searchRecord($account_name, $username, $url) {
 
 		try{
 			$sql = "SELECT * FROM data WHERE 1=1";
-			if(isset($account_name) && !empty($account_name)) $sql .= " AND account_name = '$account_name'";
-			if(isset($username) && !empty($username)) $sql .= " AND username = '$username'";
-			if(isset($url) && !empty($url)) $sql .= " AND url = '$url'";
+			if(isset($account_name) && !empty($account_name)) 	$sql .= " AND account_name = '$account_name'";
+			if(isset($username) && !empty($username))  			$sql .= " AND username = '$username'";
+			if(isset($url) && !empty($url)) 					$sql .= " AND url = '$url'";
 
 			$stmt = $this->connection->prepare($sql);
 			$stmt->execute();
@@ -150,8 +150,8 @@ class Database {
 	public function insertRecord($account_name, $username, $password, $comment, $url) {
 
 		try{
-			$sql = "INSERT INTO data (account_name, username, password, comment, url)
-					VALUES (:account_name, :username, :password, :comment, :url)";
+			$sql 		 = "INSERT INTO data (account_name, username, password, comment, url)
+							VALUES (:account_name, :username, :password, :comment, :url)";
 			$sql_last_id = "SELECT * FROM data
 							ORDER BY id DESC LIMIT 1";
 
@@ -183,9 +183,9 @@ class Database {
 	public function updateRecord($old_username, $account_name, $username, $password, $comment, $url) {
 
 		try{
-			$sql = "UPDATE data
-					SET account_name=:account_name, username=:username, password=:password, comment=:comment, url=:url
-					WHERE username=:old_username";
+			$sql 		 = "UPDATE data
+							SET account_name=:account_name, username=:username, password=:password, comment=:comment, url=:url
+							WHERE username=:old_username";
 			$sql_last_id = "SELECT * FROM data
 							WHERE username=:username";
 

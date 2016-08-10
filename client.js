@@ -34,7 +34,7 @@ $(document).ready(function () {
 				checkLogin(data);
 				break;
 			case 'btn-search':
-				checkFields();
+				if(!checkFields()) break;
 				data = setJSONData(searchFlag);
 				searchValues(data);
 				break;
@@ -84,11 +84,11 @@ $(document).ready(function () {
 		else if(flag == "UPDATE") {
 
 			passwordVal = $("#upd-new-password").val();
-			// if new password is empty post the old val
+			// if new password is empty post the old val of password
 			if (!$("#upd-new-password").val()) 
 				passwordVal = $("#upd-password").val();
 			data = JSON.stringify({
-					old_username 	: 	$("#upd-rslt-username").val(),
+					old_username	: 	$("#upd-rslt-username").val(),
 					accountName 	: 	$("#upd-account-name").val(),
 					username 		: 	$("#upd-username").val(),
 					password 		: 	passwordVal,
@@ -101,21 +101,7 @@ $(document).ready(function () {
 
 	function searchValues(data) {
 
-		var check = checkFields();
 		$("tbody").empty();
-
-		if(check == false) {
-			// hide the table
-			$('.table-responsive').hide();
-			// find the content, replace it and show it
-			$('.no-rslt').find('i').html("No results yet");
-			$('.no-rslt').show();
-			// hide update if needed
-			$('.form-update').hide();
-			// enable the require update message
-			$('#update-msg').show();
-			return;
-		}
 		// Clean input fields for the next requests
 		$('#btn-search').closest('form').find('input[type=text]').val('');
 
@@ -235,12 +221,14 @@ $(document).ready(function () {
 	}
 
 	function duplicateCheck(data) {
-
+		
+		// formula of data:
+		// ["Duplicate", "entry", "'value_of_col'", "for", "key", "'col_of_table'"]
 		var duplicateCheck = data[0];
 		if(!(duplicateCheck == 'Duplicate')) return true;
 
-		var columnDuplicate = data[5].replace(/\'/g, '');
-		var valueDuplicate 	= data[2].replace(/\'/g, '');
+		var columnDuplicate = data[5].replace(/\'/g, ''); 	// remove '' from str
+		var valueDuplicate 	= data[2].replace(/\'/g, '');	// remove '' from str
 		$('.no-rslt').find('i').html(columnDuplicate+": "+valueDuplicate+" already exists!");
 		$('.no-rslt').show();
 		$('.table-responsive').hide();
@@ -249,8 +237,18 @@ $(document).ready(function () {
 
 	function checkFields() {
 
-		if(!$("#search-account-name").val() && !$("#search-username").val() && !$("#search-url").val()) return false;
-		return true;
+		if($("#search-account-name").val() || $("#search-username").val() || $("#search-url").val()) return true;
+		$("tbody").empty();
+		// hide the table
+		$('.table-responsive').hide();
+		// find the content, replace it and show it
+		$('.no-rslt').find('i').html("No results yet");
+		$('.no-rslt').show();
+		// hide update if needed
+		$('.form-update').hide();
+		// enable the require update message
+		$('#update-msg').show();
+		return false;
 	}
 
 	function checkLogin(data) {
@@ -340,7 +338,6 @@ $(document).ready(function () {
 				confirmPassword: {
 					regex: "^[A-Za-z0-9\_]+$",
 					minlength: 4,
-					// just a trick for a dynamic equalTo, see var "count"
 					equalTo: ".checkpass1",
 					required: true
 				}
@@ -364,7 +361,6 @@ $(document).ready(function () {
 				confirmPassword: {
 					regex: "^[A-Za-z0-9\_]+$",
 					minlength: 4,
-					// just a trick for a dynamic equalTo, see var "count"
 					equalTo: ".checkpass2",
 					required: {
 						depends:function () {

@@ -128,7 +128,7 @@
 					</div>
 					<div class="form-group">
 						<label class="sr-only" for="upd-password">Password</label>
-						<input type="password" class="form-control" id="upd-password" placeholder="Password">
+						<input type="password" class="form-control" id="upd-password" placeholder="Password" disabled="true">
 					</div>
 					<div class="form-group">
 						<label class="sr-only" for="upd-new-password">New Password</label>

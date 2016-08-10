@@ -47,7 +47,7 @@ if(is_ajax()) {
 				$json_data = $db->insertRecord($php_object->accountName, $php_object->username, $php_object->password, $php_object->comment, $php_object->url);
 				break;
 			case "update":
-				$json_data = $db->updateRecord($php_object->old_username, $php_object->accountName, $php_object->username,	$php_object->password, $php_object->comment, $php_object->url);
+				$json_data = $db->updateRecord($php_object->old_username, $php_object->accountName, $php_object->username, $php_object->password, $php_object->comment, $php_object->url);
 				break;
 			default:
 				break;
